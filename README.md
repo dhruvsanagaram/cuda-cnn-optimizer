@@ -1,19 +1,20 @@
-# CUDA Convolution Forward Pass
+# CUDA Convolution Forward Pass with FP16, CUDA Streams, and Loop Unrolling
 
-This project implements a GPU-accelerated forward pass for a convolutional neural network using CUDA. The code is designed to efficiently compute the forward convolution over a batch of input images using a shared kernel (mask) and generate the output feature maps.
+This project implements a GPU-accelerated forward pass for a convolutional neural network using CUDA. The code is designed to efficiently compute the forward convolution over a batch of input images using a shared kernel (mask) and generate the output feature maps. To improve performance, this implementation leverages FP16 (half-precision floating point) conversions, CUDA streams for asynchronous operations, and loop unrolling.
 
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Code Structure](#code-structure)
 3. [Kernel Implementation](#kernel-implementation)
-4. [Usage](#usage)
-5. [CUDA Details](#cuda-details)
-6. [Error Handling](#error-handling)
-7. [Performance Considerations](#performance-considerations)
+4. [FP16, CUDA Streams, and Loop Unrolling](#fp16-cuda-streams-and-loop-unrolling)
+5. [Usage](#usage)
+6. [CUDA Details](#cuda-details)
+7. [Error Handling](#error-handling)
+8. [Performance Considerations](#performance-considerations)
 
 ## Introduction
 
-In this project, we use CUDA to implement the forward pass of a convolutional neural network (CNN) over a batch of images. The convolution operation is a crucial part of many deep learning models and is typically computationally intensive, making it a great candidate for GPU acceleration.
+In this project, we use CUDA to implement the forward pass of a convolutional neural network (CNN) over a batch of images. The convolution operation is a crucial part of many deep learning models and is typically computationally intensive, making it a great candidate for GPU acceleration. Additionally, this implementation optimizes performance by employing half-precision (FP16) conversions, CUDA streams for parallel execution, and loop unrolling to reduce overhead.
 
 ### Problem Overview
 
@@ -55,7 +56,4 @@ This function is where the main convolution operation takes place. It computes t
 - **Threading**: The kernel is designed to use a grid of threads to handle the computation for each output pixel in parallel. Each thread is responsible for calculating a specific pixel in the output feature map.
 
 ```cpp
-#define out_4d(i3, i2, i1, i0) output[(i3) * (M * H_out * W_out) + (i2) * (H_out * W_out) + (i1) * (W_out) + i0]
-#define in_4d(i3, i2, i1, i0) input[(i3) * (C * H * W) + (i2) * (H * W) + (i1) * (W) + i0]
-#define mask_4d(i3, i2, i1, i0) mask[(i3) * (C * K * K) + (i2) * (K * K) + (i1) * (K) + i0]
-
+#define out_4d(i3, i
